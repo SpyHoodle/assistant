@@ -97,7 +97,7 @@ class Module:
                         return f"There {'were' if year <= now.year else 'will be'} {'366' if calendar.isleap(year) else '365'} days in {year}"
 
             elif "was" in command or "what" in command or "were" in command:  # what day was monday
-                pass #TODO
+                pass  # TODO
 
         elif "leap" in command:
             for word in command:
@@ -109,3 +109,6 @@ class Module:
                 year = now.year
             return f"{year} {'is' if year == now.year else ('was' if year < now.year else 'will')}{'' if calendar.isleap(year) else ' not'}" + \
                    f" {'be ' if year > now.year else ''}a leap year"
+
+    def enter(self, query, window) -> bool:
+        return False
