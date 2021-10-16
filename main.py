@@ -17,7 +17,6 @@ class Bar(Gtk.Window):
         x1 = max(r.x + r.width for r in geo)
         y1 = max(r.y + r.height for r in geo)
         self.monitor_width, self.monitor_height = x1 - x0, y1 - y0
-
         self.default_width = self.monitor_width / 1.8
 
         # Initialise the basic default UI
@@ -29,11 +28,11 @@ class Bar(Gtk.Window):
         self.load_css("styles.css")
 
         # Some default settings
-        self.set_default_size(self.default_width, 40)  # Default size TODO: set based on width of screen
-        self.set_title("Assistant")     # The title (name in progress)
-        self.set_keep_above(True)       # Keep on top of everything else in case it's clicked off
-        self.set_resizable(True)        # For: Kde Plasma, True | For: DWM, False | (others not yet tested)
-        self.set_decorated(False)       # Remove titlebar and other decorations
+        self.set_default_size(self.default_width, 40)  # Default size for the window itself
+        self.set_title("Assistant")                    # The title (name in progress)
+        self.set_keep_above(True)                      # Keep on top of everything else in case it's clicked off
+        self.set_resizable(False)                       # For: Kde Plasma, True | For: DWM, False | (others not yet tested)
+        self.set_decorated(False)                      # Remove titlebar and other decorations
 
         # The main List box -> contains the bar and the results
         self.mainbox = Gtk.VBox(spacing=15)
@@ -53,7 +52,7 @@ class Bar(Gtk.Window):
         # Note: Buttons are added in opposite order to the order they are shown
         # A button to close the program
         button_close = Gtk.Button(image=Gtk.Image.new_from_file("./icons/close.svg"))
-        button_close.connect("clicked", self.quit)
+        button_close.connect("clicked", self.close_window)
         self.buttons.pack_end(button_close, False, True, 0)
 
         # A button to open the menu
@@ -63,7 +62,7 @@ class Bar(Gtk.Window):
 
         # A button to confirm a search
         button_search = Gtk.Button(image=Gtk.Image.new_from_file("./icons/search.svg"))
-        button_search.connect("clicked", self.quit)
+        button_search.connect("clicked", self.close_window)
         self.buttons.pack_end(button_search, False, True, 0)
 
         # Check to see if a compositor is running so we can run transparency effects
@@ -74,7 +73,6 @@ class Bar(Gtk.Window):
 
         # Finally, show the window
         self.add(self.mainbox)
-        # self.connect("key-press-event", self.)
         self.set_app_paintable(True)
         self.show_all()
 
@@ -98,6 +96,7 @@ class Bar(Gtk.Window):
 
         # Reset position and size to defaults!
         self.default_position()
+        self.default_size()
 
         # Get a response from the interpreter
         response = self.interpreter.get_response(entry)
@@ -117,10 +116,13 @@ class Bar(Gtk.Window):
     def default_position(self):
         self.move(int(self.monitor_width / 2) - (self.get_size()[0] / 2), 100)
 
+    def default_size(self):
+        self.resize(self.default_width, 40) 
+
     def menu(self, button):
         print("woof")
 
-    def quit(self, button):
+    def close_window(self, button):
         self.close()
 
     def load_css(self, file):
